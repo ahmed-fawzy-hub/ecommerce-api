@@ -13,6 +13,7 @@ A comprehensive RESTful API for e-commerce applications built with Laravel 12, f
 - 📧 **Email Notifications** for order updates
 - 🎫 **Queue System** for background jobs
 - 🔒 **Permission-based Access Control** using Spatie Laravel Permission
+- 🛡️ **Rate Limiting** to prevent abuse and DDoS attacks
 
 ## 🚀 Tech Stack
 
@@ -209,11 +210,73 @@ Automatic emails sent for:
 5. Order status updated to "Paid"
 6. Email notification sent
 
+### Rate Limiting
+The API implements rate limiting to prevent abuse:
+
+| Endpoint Type | Rate Limit | Scope |
+|--------------|------------|-------|
+| Authentication | 5 requests/minute | Per IP |
+| Payment Operations | 10 requests/minute | Per User/IP |
+| General API | 60 requests/minute | Per User/IP |
+| Public Endpoints | 60 requests/minute | Per IP |
+
 ## 🧪 Testing
 
+### Using Postman
+Import the included `postman_collection.json` file into Postman to test all API endpoints:
+
+1. Open Postman
+2. Click **Import**
+3. Select `postman_collection.json`
+4. Update the `base_url` variable if needed
+5. Start testing!
+
+The collection includes:
+- ✅ Authentication flows (Admin, Customer, Delivery)
+- ✅ Product CRUD operations
+- ✅ Category management
+- ✅ Cart operations
+- ✅ Checkout process
+- ✅ Payment creation and confirmation
+
+### Running Tests
 ```bash
 composer test
 ```
+
+### Manual Testing
+```bash
+# Test authentication
+curl -X POST http://127.0.0.1:8000/api/customer/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","email":"test@example.com","password":"password123","password_confirmation":"password123"}'
+
+# Test product listing
+curl http://127.0.0.1:8000/api/products
+```
+
+## 🔒 Security
+
+This application implements multiple security layers:
+
+- **Authentication**: Token-based auth with Laravel Sanctum
+- **Authorization**: Role and permission-based access control
+- **Rate Limiting**: Protection against brute force and DDoS
+- **Input Validation**: All inputs are validated
+- **SQL Injection Prevention**: Using Eloquent ORM
+- **XSS Protection**: Laravel's built-in escaping
+- **Payment Security**: Stripe webhook signature verification
+
+For detailed security information, see [SECURITY.md](SECURITY.md).
+
+**Security Checklist for Production:**
+- [ ] Set `APP_DEBUG=false`
+- [ ] Use production Stripe keys
+- [ ] Enable HTTPS
+- [ ] Configure CORS properly
+- [ ] Set strong database passwords
+- [ ] Enable rate limiting
+- [ ] Configure proper logging
 
 ## 📝 Environment Variables
 
@@ -236,7 +299,7 @@ This project is open-sourced software licensed under the [MIT license](https://o
 
 ## 👨‍💻 Author
 
-Your Name - [Your GitHub Profile](https://github.com/yourusername)
+Ahmed Fawzy - [GitHub Profile](https://github.com/ahmed-fawzy-hub)
 
 ## 🙏 Acknowledgments
 
@@ -244,3 +307,4 @@ Your Name - [Your GitHub Profile](https://github.com/yourusername)
 - Spatie Laravel Permission
 - Stripe PHP SDK
 - Laravel Reverb
+

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('throttle:auth')->group(function () {
     Route::post('/register', [AdminAuthController::class, 'register']);
     Route::post('/login', [AdminAuthController::class, 'login']);
     Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
@@ -16,7 +16,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/token', [AdminAuthController::class, 'getAccessToken']);
     });
 });
-Route::prefix('customer')->group(function () {
+Route::prefix('customer')->middleware('throttle:auth')->group(function () {
     Route::post('/register', [CustomerAuthController::class, 'register']);
     Route::post('/login', [CustomerAuthController::class, 'login']);
     Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
@@ -25,7 +25,7 @@ Route::prefix('customer')->group(function () {
         Route::get('/token', [CustomerAuthController::class, 'getAccessToken']);
     });
 });
-Route::prefix('delivery')->group(function () {
+Route::prefix('delivery')->middleware('throttle:auth')->group(function () {
     Route::post('/register', [DeliveryAuthController::class, 'register']);
     Route::post('/login', [DeliveryAuthController::class, 'login']);
     Route::middleware(['auth:sanctum', 'isDelivery'])->group(function () {
